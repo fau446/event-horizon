@@ -1,1 +1,1 @@
-# event-horizon
+# Event Horizon
