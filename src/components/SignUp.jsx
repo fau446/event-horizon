@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
 
 function SignUp() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   function handleInputChange(e) {
@@ -26,6 +29,9 @@ function SignUp() {
         return;
       }
       console.log("Account Creation Successful!");
+
+      localStorage.setItem("access_token", jsonData.access_token);
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
