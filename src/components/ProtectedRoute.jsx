@@ -47,12 +47,7 @@ const ProtectedRoute = ({ component: Component }) => {
     return <p>Loading...</p>;
   }
 
-  return isAuthenticated ? (
-    <p>{loggedInUser} is logged in</p>
-  ) : (
-    <p>Not logged in</p>
-  );
-  // return isAuthenticated ? <Component /> : null;
+  return isAuthenticated ? <Component /> : null;
 };
 
 export default ProtectedRoute;

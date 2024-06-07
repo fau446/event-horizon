@@ -3,6 +3,7 @@ import "./App.css";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -10,7 +11,11 @@ function App() {
       <Routes>
         <Route exact path="/sign_up" element={<SignUp />} />
         <Route exact path="/login" element={<Login />} />
-        <Route exact path="/" element={<ProtectedRoute />} />
+        <Route
+          exact
+          path="/"
+          element={<ProtectedRoute component={Dashboard} />}
+        />
       </Routes>
     </Router>
   );
