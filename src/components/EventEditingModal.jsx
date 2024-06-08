@@ -30,6 +30,12 @@ function EventEditingModal({
     setFormData({ ...formData, category: e.target.value });
   }
 
+  function toggleMarkAsComplete() {
+    formData.status === "complete"
+      ? setFormData({ ...formData, ["status"]: "incomplete" })
+      : setFormData({ ...formData, ["status"]: "complete" });
+  }
+
   async function handleFormSubmit(e) {
     e.preventDefault();
 
@@ -130,6 +136,15 @@ function EventEditingModal({
           onChange={handleInputChange}
         />
 
+        {formData.status === "complete" ? (
+          <button type="button" onClick={toggleMarkAsComplete}>
+            Mark as Incomplete
+          </button>
+        ) : (
+          <button type="button" onClick={toggleMarkAsComplete}>
+            Mark as Complete
+          </button>
+        )}
         <button>Save Changes</button>
       </form>
     </div>
