@@ -2,14 +2,17 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Calendar from "./Calendar";
 import EventCreationModal from "./EventCreationModal";
+import EventEditingModal from "./EventEditingModal";
 import API_URL from "../assets/api-url";
 
 function Dashboard() {
   const navigate = useNavigate();
 
   const [displayEventModal, setDisplayEventModal] = useState(false);
+  const [displayEditModal, setDisplayEditModal] = useState(false);
   const [categories, setCategories] = useState([]);
   const [events, setEvents] = useState([]);
+  const [selectedEvent, setSelectedEvent] = useState({});
 
   async function fetchEvents() {
     try {
@@ -71,7 +74,19 @@ function Dashboard() {
           setDisplayEventModal={setDisplayEventModal}
         />
       )}
-      <Calendar events={events} />
+      {displayEditModal && (
+        <EventEditingModal
+          event={selectedEvent}
+          fetchEvents={fetchEvents}
+          categories={categories}
+          setDisplayEditModal={setDisplayEditModal}
+        />
+      )}
+      <Calendar
+        events={events}
+        setSelectedEvent={setSelectedEvent}
+        setDisplayEditModal={setDisplayEditModal}
+      />
     </div>
   );
 }

@@ -5,12 +5,18 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const localizer = momentLocalizer(moment);
 
-function Calendar({ events }) {
+function Calendar({ events, setSelectedEvent, setDisplayEditModal }) {
+  const handleSelectEvent = useCallback((event) => {
+    setSelectedEvent(event);
+    setDisplayEditModal(true);
+  }, []);
+
   return (
     <div>
       <BigCalendar
         localizer={localizer}
         events={events}
+        onSelectEvent={handleSelectEvent}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 500 }}
