@@ -64,6 +64,32 @@ function EventEditingModal({
     }
   }
 
+  async function deleteEvent() {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      if (!accessToken) {
+        Navigate("/login");
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/events/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ id: formData.id }),
+      });
+
+      if (response.ok) {
+        fetchEvents();
+        setDisplayEditModal(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <div>
       <h2>Edit Event</h2>
@@ -145,6 +171,9 @@ function EventEditingModal({
             Mark as Complete
           </button>
         )}
+        <button type="button" onClick={deleteEvent}>
+          Delete event
+        </button>
         <button>Save Changes</button>
       </form>
     </div>
