@@ -12,6 +12,7 @@ function EventCreationModal({ categories, fetchEvents, setDisplayEventModal }) {
   });
   const [displayNewCategoryField, setDisplayNewCategoryField] = useState(false);
   const [newCategory, setNewCategory] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   function handleInputChange(e) {
     if (e.target.name === "category") setDisplayNewCategoryField(false);
@@ -26,6 +27,22 @@ function EventCreationModal({ categories, fetchEvents, setDisplayEventModal }) {
 
   async function handleFormSubmit(e) {
     e.preventDefault();
+
+    const requiredFields = [
+      "title",
+      "start_time",
+      "end_time",
+      "category",
+      "body",
+    ];
+    const emptyFields = requiredFields.filter((field) => !formData[field]);
+
+    if (emptyFields.length > 0) {
+      setErrorMessage(
+        `Please fill in the missing fields: ${emptyFields.join(", ")}`
+      );
+      return;
+    }
 
     try {
       const accessToken = localStorage.getItem("access_token");
@@ -51,6 +68,8 @@ function EventCreationModal({ categories, fetchEvents, setDisplayEventModal }) {
       console.log(err);
     }
   }
+
+  console.log(errorMessage);
 
   return (
     <div>
