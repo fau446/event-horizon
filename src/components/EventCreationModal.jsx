@@ -1,7 +1,13 @@
 import { useState } from "react";
 import API_URL from "../assets/api-url";
 
-function EventCreationModal({ categories, fetchEvents, setDisplayEventModal }) {
+function EventCreationModal({
+  categories,
+  fetchEvents,
+  setDisplayEventModal,
+  filteredCategories,
+  setFilteredCategories,
+}) {
   const [formData, setFormData] = useState({
     title: "",
     start_time: "",
@@ -15,7 +21,10 @@ function EventCreationModal({ categories, fetchEvents, setDisplayEventModal }) {
   const [errorMessage, setErrorMessage] = useState("");
 
   function handleInputChange(e) {
-    if (e.target.name === "category") setDisplayNewCategoryField(false);
+    if (e.target.name === "category") {
+      setDisplayNewCategoryField(false);
+      setNewCategory("");
+    }
 
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
@@ -63,13 +72,14 @@ function EventCreationModal({ categories, fetchEvents, setDisplayEventModal }) {
       if (response.ok) {
         fetchEvents();
         setDisplayEventModal(false);
+        if (newCategory !== "") {
+          setFilteredCategories([...filteredCategories, newCategory]);
+        }
       }
     } catch (err) {
       console.log(err);
     }
   }
-
-  console.log(errorMessage);
 
   return (
     <div>

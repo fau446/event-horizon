@@ -6,6 +6,8 @@ function EventEditingModal({
   fetchEvents,
   categories,
   setDisplayEditModal,
+  filteredCategories,
+  setFilteredCategories,
 }) {
   const [formData, setFormData] = useState({
     id: event.id,
@@ -20,7 +22,10 @@ function EventEditingModal({
   const [newCategory, setNewCategory] = useState("");
 
   function handleInputChange(e) {
-    if (e.target.name === "category") setDisplayNewCategoryField(false);
+    if (e.target.name === "category") {
+      setDisplayNewCategoryField(false);
+      setNewCategory("");
+    }
 
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
@@ -58,6 +63,9 @@ function EventEditingModal({
       if (response.ok) {
         fetchEvents();
         setDisplayEditModal(false);
+        if (newCategory !== "") {
+          setFilteredCategories([...filteredCategories, newCategory]);
+        }
       }
     } catch (err) {
       console.log(err);
