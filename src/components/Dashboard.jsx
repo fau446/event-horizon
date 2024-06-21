@@ -4,6 +4,7 @@ import Calendar from "./Calendar";
 import EventCreationModal from "./EventCreationModal";
 import EventEditingModal from "./EventEditingModal";
 import Sidebar from "./Sidebar";
+import Nav from "./Nav";
 import API_URL from "../assets/api-url";
 
 function Dashboard() {
@@ -123,7 +124,7 @@ function Dashboard() {
 
   return (
     <div>
-      <h2>You are logged in.</h2>
+      <Nav />
       <Sidebar
         categories={allCategories}
         toggleEventModal={toggleEventModal}
