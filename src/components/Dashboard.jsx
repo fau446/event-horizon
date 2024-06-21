@@ -129,6 +129,7 @@ function Dashboard() {
         categories={allCategories}
         toggleEventModal={toggleEventModal}
         onCategoryToggle={handleCategoryToggle}
+        fetchEvents={fetchEvents}
       />
       {displayEventModal && (
         <EventCreationModal
