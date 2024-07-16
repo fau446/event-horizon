@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
 
 function EventCreationModal({
@@ -8,6 +9,8 @@ function EventCreationModal({
   filteredCategories,
   setFilteredCategories,
 }) {
+  const navigate = useNavigate;
+
   const [formData, setFormData] = useState({
     title: "",
     start_time: "",
@@ -56,7 +59,7 @@ function EventCreationModal({
     try {
       const accessToken = localStorage.getItem("access_token");
       if (!accessToken) {
-        Navigate("/login");
+        navigate("/login");
         return;
       }
 

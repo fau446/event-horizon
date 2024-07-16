@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
 
 function EventEditingModal({
@@ -9,6 +10,8 @@ function EventEditingModal({
   filteredCategories,
   setFilteredCategories,
 }) {
+  const navigate = useNavigate;
+
   const [formData, setFormData] = useState({
     id: event.id,
     title: event.title,
@@ -47,7 +50,7 @@ function EventEditingModal({
     try {
       const accessToken = localStorage.getItem("access_token");
       if (!accessToken) {
-        Navigate("/login");
+        navigate("/login");
         return;
       }
 
@@ -76,7 +79,7 @@ function EventEditingModal({
     try {
       const accessToken = localStorage.getItem("access_token");
       if (!accessToken) {
-        Navigate("/login");
+        navigate("/login");
         return;
       }
 
