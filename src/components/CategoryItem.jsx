@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
 
 function CategoryItem({ category, onToggle, fetchEvents }) {
+  const navigate = useNavigate();
+
   const [isChecked, setIsChecked] = useState(true);
   const [displayEditField, setDisplayEditField] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState(category);
@@ -33,7 +36,7 @@ function CategoryItem({ category, onToggle, fetchEvents }) {
     try {
       const accessToken = localStorage.getItem("access_token");
       if (!accessToken) {
-        Navigate("/login");
+        navigate("/login");
         return;
       }
 
@@ -52,6 +55,31 @@ function CategoryItem({ category, onToggle, fetchEvents }) {
 
         // Makes sure that the events will not be filtered out if checkbox is checked
         if (isChecked) onToggle(newCategoryName, true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function deleteCategory() {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      if (!accessToken) {
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/category/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ name: category }),
+      });
+
+      if (response.ok) {
+        fetchEvents();
       }
     } catch (err) {
       console.log(err);
@@ -87,6 +115,9 @@ function CategoryItem({ category, onToggle, fetchEvents }) {
             Edit Name
           </button>
         )}
+        <button type="button" onClick={deleteCategory}>
+          Delete Category
+        </button>
       </div>
     </div>
   );
