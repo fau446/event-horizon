@@ -18,6 +18,9 @@ function Dashboard() {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState({});
 
+  // used to update filteredCategories during initial render
+  const updateArray = filteredCategories;
+
   async function fetchEvents() {
     try {
       const accessToken = localStorage.getItem("access_token");
@@ -104,14 +107,14 @@ function Dashboard() {
   }
 
   function handleCategoryToggle(category, isChecked) {
-    const newFilteredCategories = isChecked
-      ? [...filteredCategories, category]
-      : filteredCategories.filter((cat) => cat !== category);
+    if (!isChecked) {
+      updateArray.splice(updateArray.indexOf(category), 1);
+    } else {
+      if (!updateArray.includes(category)) updateArray.push(category);
+    }
 
-    const uniqueFilteredCategories = [...new Set(newFilteredCategories)];
-
-    setFilteredCategories(uniqueFilteredCategories);
-    filterEvents(uniqueFilteredCategories);
+    setFilteredCategories(updateArray);
+    filterEvents(updateArray);
   }
 
   function filterEvents(categoriesList) {
