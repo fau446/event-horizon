@@ -8,8 +8,10 @@ function EventCreationModal({
   setDisplayEventModal,
   filteredCategories,
   setFilteredCategories,
+  setFeedbackMessage,
+  setError,
 }) {
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -21,7 +23,6 @@ function EventCreationModal({
   });
   const [displayNewCategoryField, setDisplayNewCategoryField] = useState(false);
   const [newCategory, setNewCategory] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
   function handleInputChange(e) {
     if (e.target.name === "category") {
@@ -50,7 +51,8 @@ function EventCreationModal({
     const emptyFields = requiredFields.filter((field) => !formData[field]);
 
     if (emptyFields.length > 0) {
-      setErrorMessage(
+      setError(true);
+      setFeedbackMessage(
         `Please fill in the missing fields: ${emptyFields.join(", ")}`
       );
       return;
@@ -75,12 +77,15 @@ function EventCreationModal({
       if (response.ok) {
         fetchEvents();
         setDisplayEventModal(false);
+        setError(false);
+        setFeedbackMessage("Event successfully created!");
         if (newCategory !== "") {
           setFilteredCategories([...filteredCategories, newCategory]);
         }
       }
     } catch (err) {
-      console.log(err);
+      setError(true);
+      setFeedbackMessage("Error, server is down.");
     }
   }
 

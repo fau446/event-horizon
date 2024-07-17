@@ -9,8 +9,10 @@ function EventEditingModal({
   setDisplayEditModal,
   filteredCategories,
   setFilteredCategories,
+  setFeedbackMessage,
+  setError,
 }) {
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     id: event.id,
@@ -66,12 +68,15 @@ function EventEditingModal({
       if (response.ok) {
         fetchEvents();
         setDisplayEditModal(false);
+        setError(false);
+        setFeedbackMessage("Event successfully edited!");
         if (newCategory !== "") {
           setFilteredCategories([...filteredCategories, newCategory]);
         }
       }
     } catch (err) {
-      console.log(err);
+      setError(true);
+      setFeedbackMessage("Error, server is down.");
     }
   }
 
@@ -95,9 +100,12 @@ function EventEditingModal({
       if (response.ok) {
         fetchEvents();
         setDisplayEditModal(false);
+        setError(false);
+        setFeedbackMessage("Event successfully deleted!");
       }
     } catch (err) {
-      console.log(err);
+      setError(true);
+      setFeedbackMessage("Error, server is down.");
     }
   }
 

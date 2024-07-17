@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
 
-function CategoryItem({ category, onToggle, fetchEvents }) {
+function CategoryItem({
+  category,
+  onToggle,
+  fetchEvents,
+  setFeedbackMessage,
+  setError,
+}) {
   const navigate = useNavigate();
 
   const [isChecked, setIsChecked] = useState(true);
@@ -52,12 +58,15 @@ function CategoryItem({ category, onToggle, fetchEvents }) {
       if (response.ok) {
         fetchEvents();
         setDisplayEditField(false);
+        setError(false);
+        setFeedbackMessage("Category name change successful!");
 
         // Makes sure that the events will not be filtered out if checkbox is checked
         if (isChecked) onToggle(newCategoryName, true);
       }
     } catch (err) {
-      console.log(err);
+      setError(true);
+      setFeedbackMessage("Error, server is down.");
     }
   }
 
@@ -80,9 +89,12 @@ function CategoryItem({ category, onToggle, fetchEvents }) {
 
       if (response.ok) {
         fetchEvents();
+        setError(false);
+        setFeedbackMessage("Category successfully deleted!");
       }
     } catch (err) {
-      console.log(err);
+      setError(true);
+      setFeedbackMessage("Error, server is down.");
     }
   }
 

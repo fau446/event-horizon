@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
+import Feedback from "./Feedback";
 
 function SignUp() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [error, setError] = useState(false);
 
   function handleInputChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,23 +26,38 @@ function SignUp() {
         body: JSON.stringify(formData),
       });
       const jsonData = await response.json();
-      console.log(jsonData);
       if (jsonData.error) {
-        console.log(jsonData.error);
+        setError(true);
+        setFeedbackMessage(jsonData.error);
         return;
       }
-      console.log("Account Creation Successful!");
 
       localStorage.setItem("access_token", jsonData.access_token);
+      setError(false);
+      setFeedbackMessage("Sign up Successful!");
       navigate("/");
     } catch (err) {
-      console.log(err);
+      setError(true);
+      setFeedbackMessage("Error, server is down.");
     }
   }
+
+  useEffect(() => {
+    if (feedbackMessage) {
+      const timer = setTimeout(() => {
+        setFeedbackMessage("");
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [feedbackMessage]);
 
   return (
     <>
       <h2>Sign Up</h2>
+      {feedbackMessage !== "" && (
+        <Feedback message={feedbackMessage} error={error} />
+      )}
       <form onSubmit={handleFormSubmit}>
         <label htmlFor="email">Email:</label>
         <input

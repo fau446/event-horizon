@@ -5,6 +5,8 @@ function Sidebar({
   toggleEventModal,
   onCategoryToggle,
   fetchEvents,
+  setFeedbackMessage,
+  setError,
 }) {
   return (
     <div>
@@ -15,6 +17,8 @@ function Sidebar({
             category={category}
             onToggle={onCategoryToggle}
             fetchEvents={fetchEvents}
+            setFeedbackMessage={setFeedbackMessage}
+            setError={setError}
           />
         </div>
       ))}

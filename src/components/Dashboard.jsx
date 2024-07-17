@@ -5,6 +5,7 @@ import EventCreationModal from "./EventCreationModal";
 import EventEditingModal from "./EventEditingModal";
 import Sidebar from "./Sidebar";
 import Nav from "./Nav";
+import Feedback from "./Feedback";
 import API_URL from "../assets/api-url";
 
 function Dashboard() {
@@ -17,6 +18,8 @@ function Dashboard() {
   const [allEvents, setAllEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState({});
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [error, setError] = useState(false);
 
   // used to update filteredCategories during initial render
   const updateArray = filteredCategories;
@@ -47,7 +50,8 @@ function Dashboard() {
         setAllEvents(formattedEvents);
       }
     } catch (err) {
-      console.log(err);
+      setError(true);
+      setFeedbackMessage("Error, server is down.");
     }
   }
 
@@ -100,6 +104,16 @@ function Dashboard() {
     updateCategories();
   }, [allEvents]);
 
+  useEffect(() => {
+    if (feedbackMessage) {
+      const timer = setTimeout(() => {
+        setFeedbackMessage("");
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [feedbackMessage]);
+
   function toggleEventModal() {
     displayEventModal
       ? setDisplayEventModal(false)
@@ -128,11 +142,16 @@ function Dashboard() {
   return (
     <div>
       <Nav />
+      {feedbackMessage !== "" && (
+        <Feedback message={feedbackMessage} error={error} />
+      )}
       <Sidebar
         categories={allCategories}
         toggleEventModal={toggleEventModal}
         onCategoryToggle={handleCategoryToggle}
         fetchEvents={fetchEvents}
+        setFeedbackMessage={setFeedbackMessage}
+        setError={setError}
       />
       {displayEventModal && (
         <EventCreationModal
@@ -141,6 +160,8 @@ function Dashboard() {
           setDisplayEventModal={setDisplayEventModal}
           filteredCategories={filteredCategories}
           setFilteredCategories={setFilteredCategories}
+          setFeedbackMessage={setFeedbackMessage}
+          setError={setError}
         />
       )}
       {displayEditModal && (
@@ -151,6 +172,8 @@ function Dashboard() {
           setDisplayEditModal={setDisplayEditModal}
           filteredCategories={filteredCategories}
           setFilteredCategories={setFilteredCategories}
+          setFeedbackMessage={setFeedbackMessage}
+          setError={setError}
         />
       )}
       <Calendar
