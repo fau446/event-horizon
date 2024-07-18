@@ -77,6 +77,10 @@ function Login() {
         />
         <button>Login</button>
       </form>
+      <p>
+        New to Event Horizon?{" "}
+        <a onClick={() => navigate("/sign_up")}>Sign Up</a>
+      </p>
     </>
   );
 }
