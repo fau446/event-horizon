@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 function EventEditingModal({
   event,
@@ -25,6 +26,8 @@ function EventEditingModal({
   });
   const [displayNewCategoryField, setDisplayNewCategoryField] = useState(false);
   const [newCategory, setNewCategory] = useState("");
+  const [displayConfirmationWindow, setDisplayConfirmationWindow] =
+    useState(false);
 
   function handleInputChange(e) {
     if (e.target.name === "category") {
@@ -111,6 +114,12 @@ function EventEditingModal({
 
   return (
     <div>
+      {displayConfirmationWindow && (
+        <DeleteConfirmation
+          deleteAction={deleteEvent}
+          setDisplayConfirmationWindow={setDisplayConfirmationWindow}
+        />
+      )}
       <h2>Edit Event</h2>
       <form onSubmit={handleFormSubmit}>
         <label htmlFor="title">Title:</label>
@@ -190,7 +199,10 @@ function EventEditingModal({
             Mark as Complete
           </button>
         )}
-        <button type="button" onClick={deleteEvent}>
+        <button
+          type="button"
+          onClick={() => setDisplayConfirmationWindow(true)}
+        >
           Delete event
         </button>
         <button>Save Changes</button>

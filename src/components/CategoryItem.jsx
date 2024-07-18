@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 function CategoryItem({
   category,
@@ -14,6 +15,8 @@ function CategoryItem({
   const [isChecked, setIsChecked] = useState(true);
   const [displayEditField, setDisplayEditField] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState(category);
+  const [displayConfirmationWindow, setDisplayConfirmationWindow] =
+    useState(false);
 
   useEffect(() => {
     onToggle(category, true);
@@ -100,6 +103,12 @@ function CategoryItem({
 
   return (
     <div>
+      {displayConfirmationWindow && (
+        <DeleteConfirmation
+          deleteAction={deleteCategory}
+          setDisplayConfirmationWindow={setDisplayConfirmationWindow}
+        />
+      )}
       <input
         type="checkbox"
         name={category + "Checkbox"}
@@ -127,7 +136,10 @@ function CategoryItem({
             Edit Name
           </button>
         )}
-        <button type="button" onClick={deleteCategory}>
+        <button
+          type="button"
+          onClick={() => setDisplayConfirmationWindow(true)}
+        >
           Delete Category
         </button>
       </div>
