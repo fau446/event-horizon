@@ -1,0 +1,107 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  z-index: 6;
+  border-radius: 15px;
+  padding: 35px 10px 35px 35px;
+  max-width: calc(100% - 80px);
+  min-width: calc(100% - 500px);
+}
+
+.content {
+  overflow: auto;
+  max-height: 80vh;
+  padding: 0 25px 1px 2px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #8b8b8b;
+  padding-bottom: 15px;
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
+
+.close {
+  font-weight: bold;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.field,
+.time {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.times {
+  display: flex;
+  gap: 20px;
+}
+
+.time {
+  width: 50%;
+}
+
+.categories {
+  display: flex;
+  column-gap: 20px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.categoryItem {
+  display: flex;
+  gap: 5px;
+}
+
+.field textarea {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.confirm {
+  background-color: #29dd29;
+  border: none;
+}
+
+.confirm:hover {
+  background-color: #83ed83;
+}
+
+.delete {
+  background-color: #f71919;
+  border: none;
+}
+
+.delete:hover {
+  background-color: #fc4b4b;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  z-index: 5;
+}

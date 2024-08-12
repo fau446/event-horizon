@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
 import DeleteConfirmation from "./DeleteConfirmation";
+import styles from "../styles/EventModal.module.css";
 
 function EventEditingModal({
   event,
@@ -113,101 +114,137 @@ function EventEditingModal({
   }
 
   return (
-    <div>
-      {displayConfirmationWindow && (
-        <DeleteConfirmation
-          deleteAction={deleteEvent}
-          setDisplayConfirmationWindow={setDisplayConfirmationWindow}
-        />
-      )}
-      <h2>Edit Event</h2>
-      <form onSubmit={handleFormSubmit}>
-        <label htmlFor="title">Title:</label>
-        <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleInputChange}
-        />
-        <label htmlFor="start_time">Start Time:</label>
-        <input
-          type="datetime-local"
-          name="start_time"
-          id="start_time"
-          value={formData.start_time}
-          onChange={handleInputChange}
-        />
-        <label htmlFor="end_time">End Time:</label>
-        <input
-          type="datetime-local"
-          name="end_time"
-          id="end_time"
-          value={formData.end_time}
-          onChange={handleInputChange}
-        />
-        <label htmlFor="category">Category:</label>
-        {categories.map((category, index) => (
-          <div key={index}>
-            <input
-              type="radio"
-              name="category"
-              id={category}
-              value={category}
-              checked={formData.category === category}
-              onChange={handleInputChange}
+    <>
+      <div className={styles.modal}>
+        <div className={styles.content}>
+          {displayConfirmationWindow && (
+            <DeleteConfirmation
+              deleteAction={deleteEvent}
+              setDisplayConfirmationWindow={setDisplayConfirmationWindow}
             />
-            <label htmlFor={category}>{category}</label>
-          </div>
-        ))}
-        {displayNewCategoryField ? (
-          <div>
-            <label htmlFor="newCategory">New Category:</label>
-            <input
-              type="text"
-              name="newCategory"
-              id="newCategory"
-              value={newCategory}
-              onChange={handleNewCategoryChange}
-            />
-          </div>
-        ) : (
-          <div>
-            <button
-              type="button"
-              onClick={() => setDisplayNewCategoryField(true)}
-            >
-              Add new category
-            </button>
-          </div>
-        )}
-        <label htmlFor="body">Description:</label>
-        <textarea
-          name="body"
-          id="body"
-          cols="30"
-          rows="10"
-          value={formData.body}
-          onChange={handleInputChange}
-        />
+          )}
 
-        {formData.status === "complete" ? (
-          <button type="button" onClick={toggleMarkAsComplete}>
-            Mark as Incomplete
-          </button>
-        ) : (
-          <button type="button" onClick={toggleMarkAsComplete}>
-            Mark as Complete
-          </button>
-        )}
-        <button
-          type="button"
-          onClick={() => setDisplayConfirmationWindow(true)}
-        >
-          Delete event
-        </button>
-        <button>Save Changes</button>
-      </form>
-    </div>
+          <form className={styles.form} onSubmit={handleFormSubmit}>
+            <div className={styles.top}>
+              <h2>Edit Event</h2>
+              <p
+                className={styles.close}
+                onClick={() => setDisplayEditModal(false)}
+              >
+                X
+              </p>
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="title">Title:</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className={styles.times}>
+              <div className={styles.time}>
+                <label htmlFor="start_time">Start Time:</label>
+                <input
+                  type="datetime-local"
+                  name="start_time"
+                  id="start_time"
+                  value={formData.start_time}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className={styles.time}>
+                <label htmlFor="end_time">End Time:</label>
+                <input
+                  type="datetime-local"
+                  name="end_time"
+                  id="end_time"
+                  value={formData.end_time}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div className={styles.categorySection}>
+              <label htmlFor="category">Category:</label>
+              <div className={styles.categories}>
+                {categories.map((category, index) => (
+                  <div className={styles.categoryItem} key={index}>
+                    <input
+                      type="radio"
+                      name="category"
+                      id={category}
+                      value={category}
+                      checked={formData.category === category}
+                      onChange={handleInputChange}
+                    />
+                    <label htmlFor={category}>{category}</label>
+                  </div>
+                ))}
+              </div>
+              {displayNewCategoryField ? (
+                <div className={styles.field}>
+                  <label htmlFor="newCategory">New Category:</label>
+                  <input
+                    type="text"
+                    name="newCategory"
+                    id="newCategory"
+                    value={newCategory}
+                    onChange={handleNewCategoryChange}
+                  />
+                </div>
+              ) : (
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setDisplayNewCategoryField(true)}
+                  >
+                    Add new category
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="body">Description:</label>
+              <textarea
+                name="body"
+                id="body"
+                cols="30"
+                rows="10"
+                value={formData.body}
+                onChange={handleInputChange}
+              />
+            </div>
+            {formData.status === "complete" ? (
+              <button type="button" onClick={toggleMarkAsComplete}>
+                Mark as Incomplete
+              </button>
+            ) : (
+              <button type="button" onClick={toggleMarkAsComplete}>
+                Mark as Complete
+              </button>
+            )}
+            <div className={styles.buttons}>
+              <button type="button" onClick={() => setDisplayEditModal(false)}>
+                Cancel
+              </button>
+              <button
+                className={styles.delete}
+                type="button"
+                onClick={() => setDisplayConfirmationWindow(true)}
+              >
+                Delete event
+              </button>
+              <button className={styles.confirm}>Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div
+        className={styles.overlay}
+        onClick={() => setDisplayEditModal(false)}
+      ></div>
+    </>
   );
 }
 

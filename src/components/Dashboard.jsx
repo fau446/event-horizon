@@ -7,8 +7,9 @@ import Sidebar from "./Sidebar";
 import Nav from "./Nav";
 import Feedback from "./Feedback";
 import API_URL from "../assets/api-url";
+import styles from "../styles/Dashboard.module.css";
 
-function Dashboard() {
+function Dashboard({ loggedInUser }) {
   const navigate = useNavigate();
 
   const [displayEventModal, setDisplayEventModal] = useState(false);
@@ -140,19 +141,23 @@ function Dashboard() {
   }
 
   return (
-    <div>
-      <Nav />
+    <div className={styles.dashboard}>
+      <div className={styles.nav}>
+        <Nav loggedInUser={loggedInUser} />
+      </div>
       {feedbackMessage !== "" && (
         <Feedback message={feedbackMessage} error={error} />
       )}
-      <Sidebar
-        categories={allCategories}
-        toggleEventModal={toggleEventModal}
-        onCategoryToggle={handleCategoryToggle}
-        fetchEvents={fetchEvents}
-        setFeedbackMessage={setFeedbackMessage}
-        setError={setError}
-      />
+      <div className={styles.sidebar}>
+        <Sidebar
+          categories={allCategories}
+          toggleEventModal={toggleEventModal}
+          onCategoryToggle={handleCategoryToggle}
+          fetchEvents={fetchEvents}
+          setFeedbackMessage={setFeedbackMessage}
+          setError={setError}
+        />
+      </div>
       {displayEventModal && (
         <EventCreationModal
           categories={allCategories}

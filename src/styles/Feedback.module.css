@@ -1,0 +1,29 @@
+.feedback {
+  display: flex;
+  gap: 5px;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 10px 20px;
+  z-index: 7;
+}
+
+.feedback p {
+  margin: 0;
+}
+
+.noError {
+  background-color: #01b101;
+}
+
+.error {
+  background-color: #dd0000;
+}
+
+.icon {
+  width: 25px;
+  height: 25px;
+}

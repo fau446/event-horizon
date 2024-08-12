@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
+import styles from "../styles/Nav.module.css";
 
-function Nav() {
+function Nav({ loggedInUser }) {
   const navigate = useNavigate();
 
   async function logout() {
@@ -29,11 +30,16 @@ function Nav() {
   }
 
   return (
-    <div>
-      <h1>Event Horizon</h1>
-      <button type="button" onClick={logout}>
-        Logout
-      </button>
+    <div className={styles.nav}>
+      <div className={styles.top}>
+        <h1>Event Horizon</h1>
+        <button type="button" onClick={logout}>
+          Logout
+        </button>
+      </div>
+      <div className={styles.bottom}>
+        <h2>Welcome back {loggedInUser}!</h2>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
+import styles from "../styles/ProtectedRoute.module.css";
 
 const ProtectedRoute = ({ component: Component }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -44,10 +45,19 @@ const ProtectedRoute = ({ component: Component }) => {
   }, [navigate]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className={styles.loadingContainer}>
+        <div className="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    );
   }
 
-  return isAuthenticated ? <Component /> : null;
+  return isAuthenticated ? <Component loggedInUser={loggedInUser} /> : null;
 };
 
 export default ProtectedRoute;

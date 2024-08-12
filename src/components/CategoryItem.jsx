@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API_URL from "../assets/api-url";
 import DeleteConfirmation from "./DeleteConfirmation";
+import styles from "../styles/CategoryItem.module.css";
 
 function CategoryItem({
   category,
@@ -102,46 +103,53 @@ function CategoryItem({
   }
 
   return (
-    <div>
-      {displayConfirmationWindow && (
-        <DeleteConfirmation
-          deleteAction={deleteCategory}
-          setDisplayConfirmationWindow={setDisplayConfirmationWindow}
-        />
-      )}
-      <input
-        type="checkbox"
-        name={category + "Checkbox"}
-        id={category + "Checkbox"}
-        onChange={handleCheckboxChange}
-        checked={isChecked}
-      />
-      {displayEditField ? (
-        <input
-          type="text"
-          onChange={handleInputChange}
-          value={newCategoryName}
-        ></input>
-      ) : (
-        <label htmlFor={category + "Checkbox"}>{category}</label>
-      )}
-
-      <div>
-        {displayEditField ? (
-          <button type="button" onClick={submitNameChange}>
-            Done
-          </button>
-        ) : (
-          <button type="button" onClick={openEditField}>
-            Edit Name
-          </button>
+    <div className={styles.item}>
+      <div className={styles.left}>
+        {displayConfirmationWindow && (
+          <DeleteConfirmation
+            deleteAction={deleteCategory}
+            setDisplayConfirmationWindow={setDisplayConfirmationWindow}
+          />
         )}
-        <button
-          type="button"
+        <input
+          className="checkbox"
+          type="checkbox"
+          name={category + "Checkbox"}
+          id={category + "Checkbox"}
+          onChange={handleCheckboxChange}
+          checked={isChecked}
+        />
+        {displayEditField ? (
+          <input
+            className="text"
+            type="text"
+            onChange={handleInputChange}
+            value={newCategoryName}
+          ></input>
+        ) : (
+          <label htmlFor={category + "Checkbox"}>{category}</label>
+        )}
+      </div>
+
+      <div className={styles.buttons}>
+        {displayEditField ? (
+          <img
+            className="icon"
+            src={"../../accept.png"}
+            onClick={submitNameChange}
+          />
+        ) : (
+          <img
+            className="icon"
+            src={"../../edit.png"}
+            onClick={openEditField}
+          />
+        )}
+        <img
+          className="icon"
+          src={"../../delete.png"}
           onClick={() => setDisplayConfirmationWindow(true)}
-        >
-          Delete Category
-        </button>
+        />
       </div>
     </div>
   );
