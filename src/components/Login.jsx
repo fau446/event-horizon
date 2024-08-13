@@ -31,6 +31,7 @@ function Login() {
       if (jsonData.error) {
         setError(true);
         setFeedbackMessage(jsonData.error);
+        setIsLoading(false);
         return;
       }
 
@@ -41,6 +42,7 @@ function Login() {
     } catch (err) {
       setError(true);
       setFeedbackMessage("Error, server is down.");
+      setIsLoading(false);
     }
   }
 
