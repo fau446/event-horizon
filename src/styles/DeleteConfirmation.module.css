@@ -1,0 +1,56 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  z-index: 7;
+  border-radius: 15px;
+  padding: 30px 35px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #8b8b8b;
+  padding-bottom: 15px;
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
+
+.close {
+  font-weight: bold;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.message {
+  font-size: 1em;
+  text-align: center;
+  padding: 15px 0;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+
+.deleteBtn {
+  background-color: #f71919;
+  border: none;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  z-index: 6;
+}
