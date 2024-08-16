@@ -30,7 +30,7 @@ function Calendar({ events, setSelectedEvent, setDisplayEditModal }) {
         startAccessor="start"
         endAccessor="end"
         eventPropGetter={eventPropGetter}
-        style={{ height: 500 }}
+        style={{ height: "100%" }}
       />
     </div>
   );
