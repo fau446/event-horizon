@@ -1,3 +1,3 @@
-const API_URL = "http://35.182.79.100:8080/";
+const API_URL = "https://event-horizon-api.duckdns.org";
 
 export default API_URL;
