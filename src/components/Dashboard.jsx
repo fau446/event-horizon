@@ -61,20 +61,21 @@ function Dashboard({ loggedInUser }) {
   }, []);
 
   useEffect(() => {
-    function updateCategories() {
+    function updateCategories(categories) {
       const updatedCategories = [
-        ...new Set(allEvents.map((event) => event.category)),
+        ...new Set(allEvents.map((event) => event.category_id)),
       ];
 
       const sortedCategories = updatedCategories.sort();
-      const sortedAllCategories = allCategories.sort();
+      const sortedAllCategories = categories
+        .map((category) => category.category_id)
+        .sort();
 
       const arraysEqual =
         sortedCategories.length === sortedAllCategories.length &&
         sortedCategories.every(
           (value, index) => value === sortedAllCategories[index]
         );
-
       if (arraysEqual) {
         filterEvents(filteredCategories);
       } else {
@@ -87,22 +88,39 @@ function Dashboard({ loggedInUser }) {
             setFilteredCategories([...filteredCategories, missingCategory]);
             filterEvents([...filteredCategories, missingCategory]);
           }
-        } else {
-          // category deleted
-          const deletedCategory = allCategories.find(
-            (category) => !updatedCategories.includes(category)
-          );
-          const updatedFilteredCategories = filteredCategories.filter(
-            (category) => category !== deletedCategory
-          );
-          setFilteredCategories(updatedFilteredCategories);
-          filterEvents(updatedFilteredCategories);
         }
-        setAllCategories(updatedCategories);
+      }
+      filterEvents(filteredCategories);
+      setAllCategories(categories);
+    }
+
+    async function fetchAndUpdateCategories() {
+      try {
+        const accessToken = localStorage.getItem("access_token");
+        if (!accessToken) {
+          navigate("/login");
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/category/`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const jsonData = await response.json();
+          updateCategories(jsonData.category_list);
+        }
+      } catch (err) {
+        setError(true);
+        setFeedbackMessage("Error, server is down.");
       }
     }
 
-    updateCategories();
+    fetchAndUpdateCategories();
   }, [allEvents]);
 
   useEffect(() => {
@@ -122,19 +140,30 @@ function Dashboard({ loggedInUser }) {
   }
 
   function handleCategoryToggle(category, isChecked) {
+    let updateArrayCopy = updateArray;
     if (!isChecked) {
-      updateArray.splice(updateArray.indexOf(category), 1);
+      updateArrayCopy = updateArrayCopy.filter(
+        (item) => item.category_id !== category.category_id
+      );
     } else {
-      if (!updateArray.includes(category)) updateArray.push(category);
+      if (
+        !updateArrayCopy.some(
+          (item) => item.category_id === category.category_id
+        )
+      ) {
+        updateArrayCopy.push(category);
+      }
     }
 
-    setFilteredCategories(updateArray);
-    filterEvents(updateArray);
+    setFilteredCategories(updateArrayCopy);
+    filterEvents(updateArrayCopy);
   }
 
   function filterEvents(categoriesList) {
+    const categoryIds = categoriesList.map((category) => category.category_id);
+
     const newFilteredEvents = allEvents.filter((event) =>
-      categoriesList.includes(event.category)
+      categoryIds.includes(event.category_id)
     );
 
     setFilteredEvents(newFilteredEvents);
@@ -163,8 +192,6 @@ function Dashboard({ loggedInUser }) {
           categories={allCategories}
           fetchEvents={fetchEvents}
           setDisplayEventModal={setDisplayEventModal}
-          filteredCategories={filteredCategories}
-          setFilteredCategories={setFilteredCategories}
           setFeedbackMessage={setFeedbackMessage}
           setError={setError}
         />
@@ -175,14 +202,13 @@ function Dashboard({ loggedInUser }) {
           fetchEvents={fetchEvents}
           categories={allCategories}
           setDisplayEditModal={setDisplayEditModal}
-          filteredCategories={filteredCategories}
-          setFilteredCategories={setFilteredCategories}
           setFeedbackMessage={setFeedbackMessage}
           setError={setError}
         />
       )}
       <Calendar
         events={filteredEvents}
+        allCategories={allCategories}
         setSelectedEvent={setSelectedEvent}
         setDisplayEditModal={setDisplayEditModal}
       />

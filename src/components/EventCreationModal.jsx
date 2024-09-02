@@ -7,8 +7,6 @@ function EventCreationModal({
   categories,
   fetchEvents,
   setDisplayEventModal,
-  filteredCategories,
-  setFilteredCategories,
   setFeedbackMessage,
   setError,
 }) {
@@ -18,25 +16,37 @@ function EventCreationModal({
     title: "",
     start_time: "",
     end_time: "",
-    category: "",
+    categoryName: "",
+    categoryColor: "blue",
     body: "",
     status: "incomplete",
   });
   const [displayNewCategoryField, setDisplayNewCategoryField] = useState(false);
-  const [newCategory, setNewCategory] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   function handleInputChange(e) {
     if (e.target.name === "category") {
       setDisplayNewCategoryField(false);
-      setNewCategory("");
+      setFormData({ ...formData, categoryName: e.target.value });
+      setNewCategoryName("");
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
     }
-
-    setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
   function handleNewCategoryChange(e) {
-    setNewCategory(e.target.value);
-    setFormData({ ...formData, category: e.target.value });
+    setNewCategoryName(e.target.value);
+    setFormData({ ...formData, categoryName: e.target.value });
+  }
+
+  function handleColorDropdownChange(color) {
+    setFormData({ ...formData, categoryColor: color });
+    setDropdownOpen(!dropdownOpen);
+  }
+
+  function toggleDropdown() {
+    setDropdownOpen(!dropdownOpen);
   }
 
   async function handleFormSubmit(e) {
@@ -46,7 +56,7 @@ function EventCreationModal({
       "title",
       "start_time",
       "end_time",
-      "category",
+      "categoryName",
       "body",
     ];
     const emptyFields = requiredFields.filter((field) => !formData[field]);
@@ -80,9 +90,6 @@ function EventCreationModal({
         setDisplayEventModal(false);
         setError(false);
         setFeedbackMessage("Event successfully created!");
-        if (newCategory !== "") {
-          setFilteredCategories([...filteredCategories, newCategory]);
-        }
       }
     } catch (err) {
       setError(true);
@@ -138,30 +145,73 @@ function EventCreationModal({
             <div className={styles.categorySection}>
               <label htmlFor="category">Category:</label>
               <div className={styles.categories}>
-                {categories.map((category, index) => (
-                  <div className={styles.categoryItem} key={index}>
+                {categories.map((category) => (
+                  <div
+                    className={styles.categoryItem}
+                    key={category.category_id}
+                  >
                     <input
                       type="radio"
                       name="category"
-                      id={category}
-                      value={category}
-                      checked={formData.category === category}
+                      id={category.category_id}
+                      value={category.name}
+                      checked={formData.categoryName === category.name}
                       onChange={handleInputChange}
                     />
-                    <label htmlFor={category}>{category}</label>
+                    <label htmlFor={category.category_id}>
+                      {category.name}
+                    </label>
                   </div>
                 ))}
               </div>
               {displayNewCategoryField ? (
                 <div className={styles.field}>
                   <label htmlFor="newCategory">New Category:</label>
-                  <input
-                    type="text"
-                    name="newCategory"
-                    id="newCategory"
-                    value={newCategory}
-                    onChange={handleNewCategoryChange}
-                  />
+                  <div className={styles.newCategory}>
+                    <input
+                      type="text"
+                      name="newCategory"
+                      id="newCategory"
+                      value={newCategoryName}
+                      onChange={handleNewCategoryChange}
+                    />
+                    <div className={styles.colorDropdownWrapper}>
+                      <div
+                        className={styles.colorDropdown}
+                        onClick={toggleDropdown}
+                      >
+                        <img
+                          src={`../../colors/${formData.categoryColor}.png`}
+                          alt="Selected Color"
+                          className={styles.selectedColor}
+                        />
+                      </div>
+                      {dropdownOpen && (
+                        <ul className={styles.dropdownList}>
+                          {[
+                            "blue",
+                            "green",
+                            "red",
+                            "purple",
+                            "orange",
+                            "black",
+                          ].map((color) => (
+                            <li
+                              key={color}
+                              onClick={() => handleColorDropdownChange(color)}
+                            >
+                              <img
+                                src={`../../colors/${color}.png`}
+                                alt={color}
+                                width="25"
+                                height="25"
+                              />
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <div>

@@ -15,9 +15,11 @@ function CategoryItem({
 
   const [isChecked, setIsChecked] = useState(true);
   const [displayEditField, setDisplayEditField] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState(category);
+  const [newCategoryName, setNewCategoryName] = useState(category.name);
   const [displayConfirmationWindow, setDisplayConfirmationWindow] =
     useState(false);
+  const [colorDropdownValue, setColorDropdownValue] = useState(category.color);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     onToggle(category, true);
@@ -29,8 +31,46 @@ function CategoryItem({
     onToggle(category, newCheckedState);
   }
 
-  function handleInputChange(e) {
+  function handleEditFieldChange(e) {
     setNewCategoryName(e.target.value);
+  }
+
+  async function handleColorDropdownChange(newColorValue) {
+    try {
+      const accessToken = localStorage.getItem("access_token");
+      if (!accessToken) {
+        navigate("/login");
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/category/color`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          id: category.category_id,
+          new_color: newColorValue,
+        }),
+      });
+
+      if (response.ok) {
+        fetchEvents();
+        setError(false);
+        toggleDropdown();
+        setFeedbackMessage("Category color change successful!");
+      }
+
+      setColorDropdownValue(newColorValue);
+    } catch (err) {
+      setError(true);
+      setFeedbackMessage("Error, server is down.");
+    }
+  }
+
+  function toggleDropdown() {
+    setDropdownOpen(!dropdownOpen);
   }
 
   function openEditField() {
@@ -56,7 +96,10 @@ function CategoryItem({
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ old_name: category, new_name: newCategoryName }),
+        body: JSON.stringify({
+          id: category.category_id,
+          new_name: newCategoryName,
+        }),
       });
 
       if (response.ok) {
@@ -65,8 +108,8 @@ function CategoryItem({
         setError(false);
         setFeedbackMessage("Category name change successful!");
 
-        // Makes sure that the events will not be filtered out if checkbox is checked
-        if (isChecked) onToggle(newCategoryName, true);
+        category.name = newCategoryName;
+        if (isChecked) onToggle(category, true);
       }
     } catch (err) {
       setError(true);
@@ -88,13 +131,14 @@ function CategoryItem({
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ name: category }),
+        body: JSON.stringify({ id: category.category_id }),
       });
 
       if (response.ok) {
         fetchEvents();
         setError(false);
         setFeedbackMessage("Category successfully deleted!");
+        setDisplayConfirmationWindow(false);
       }
     } catch (err) {
       setError(true);
@@ -114,20 +158,50 @@ function CategoryItem({
         <input
           className="checkbox"
           type="checkbox"
-          name={category + "Checkbox"}
-          id={category + "Checkbox"}
+          name={category.name + "Checkbox"}
+          id={category.category_id + "Checkbox"}
           onChange={handleCheckboxChange}
           checked={isChecked}
         />
+        <div className={styles.colorDropdownWrapper}>
+          <div className={styles.colorDropdown} onClick={toggleDropdown}>
+            <img
+              src={`../../colors/${colorDropdownValue}.png`}
+              alt="Selected Color"
+              className={styles.selectedColor}
+            />
+          </div>
+          {dropdownOpen && (
+            <ul className={styles.dropdownList}>
+              {["blue", "green", "red", "purple", "orange", "black"].map(
+                (color) => (
+                  <li
+                    key={color}
+                    onClick={() => handleColorDropdownChange(color)}
+                  >
+                    <img
+                      src={`../../colors/${color}.png`}
+                      alt={color}
+                      width="25"
+                      height="25"
+                    />
+                  </li>
+                )
+              )}
+            </ul>
+          )}
+        </div>
         {displayEditField ? (
           <input
             className="text"
             type="text"
-            onChange={handleInputChange}
+            onChange={handleEditFieldChange}
             value={newCategoryName}
-          ></input>
+          />
         ) : (
-          <label htmlFor={category + "Checkbox"}>{category}</label>
+          <label htmlFor={category.category_id + "Checkbox"}>
+            {category.name}
+          </label>
         )}
       </div>
 

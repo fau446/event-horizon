@@ -830,9 +830,32 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-complete {
-  /* Crossed out, lighter shade of blue */
-  background-color: #74ad31;
+  opacity: 0.5;
   text-decoration: line-through;
+}
+
+.blue {
+  background-color: #3174ad;
+}
+
+.green {
+  background-color: #00f040;
+}
+
+.purple {
+  background-color: #f000d8;
+}
+
+.red {
+  background-color: #f00028;
+}
+
+.orange {
+  background-color: #f0a800;
+}
+
+.black {
+  background-color: #000000;
 }
 
 /*# sourceMappingURL=react-big-calendar.css.map */

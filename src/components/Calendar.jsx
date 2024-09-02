@@ -6,7 +6,12 @@ import styles from "../styles/Calendar.module.css";
 
 const localizer = momentLocalizer(moment);
 
-function Calendar({ events, setSelectedEvent, setDisplayEditModal }) {
+function Calendar({
+  events,
+  allCategories,
+  setSelectedEvent,
+  setDisplayEditModal,
+}) {
   const handleSelectEvent = useCallback((event) => {
     setSelectedEvent(event);
     setDisplayEditModal(true);
@@ -14,8 +19,16 @@ function Calendar({ events, setSelectedEvent, setDisplayEditModal }) {
 
   const eventPropGetter = (event) => {
     let className = "";
+
+    // find the category color using allCategories
+    const matchingCategory = allCategories.find(
+      (category) => category.category_id === event.category_id
+    );
+
+    className += matchingCategory.color;
+
     if (event.status === "complete") {
-      className = "rbc-complete";
+      className += " rbc-complete";
     }
 
     return { className };

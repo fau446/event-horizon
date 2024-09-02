@@ -18,10 +18,11 @@ function Sidebar({
         </button>
       </div>
       <div className={styles.list}>
-        {categories.map((category, index) => (
-          <div key={index}>
+        {categories.map((category) => (
+          <div key={category.category_id}>
             <CategoryItem
               category={category}
+              categoryId={category.category_id}
               onToggle={onCategoryToggle}
               fetchEvents={fetchEvents}
               setFeedbackMessage={setFeedbackMessage}
