@@ -1,7 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import API_URL from "../assets/api-url";
 import styles from "../styles/EventModal.module.css";
+import {
+  APIProvider,
+  Map,
+  AdvancedMarker,
+  ControlPosition,
+  MapControl,
+} from "@vis.gl/react-google-maps";
+import PlaceAutocomplete from "./PlaceAutocomplete";
+import MapHandler from "./MapHandler";
+import { formatAddress } from "../utils/HelperFunctions";
 
 function EventCreationModal({
   categories,
@@ -11,6 +20,9 @@ function EventCreationModal({
   setError,
 }) {
   const navigate = useNavigate();
+  const APIURL = import.meta.env.VITE_API_URL;
+  const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const googleMapsMapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
 
   const [formData, setFormData] = useState({
     title: "",
@@ -20,10 +32,16 @@ function EventCreationModal({
     categoryColor: "blue",
     body: "",
     status: "incomplete",
+    location: "",
   });
   const [displayNewCategoryField, setDisplayNewCategoryField] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [markerCoords, setMarkerCoords] = useState({
+    lat: 49.283272,
+    lng: -123.119057,
+  });
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
   function handleInputChange(e) {
     if (e.target.name === "category") {
@@ -76,7 +94,7 @@ function EventCreationModal({
         return;
       }
 
-      const response = await fetch(`${API_URL}/events/`, {
+      const response = await fetch(`${APIURL}/events/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,6 +114,47 @@ function EventCreationModal({
       setFeedbackMessage("Error, server is down.");
     }
   }
+
+  useEffect(() => {
+    async function getCoords() {
+      // return if selectedPlace is null
+      if (selectedPlace === null || selectedPlace === undefined) return;
+
+      let formattedAddress = "";
+      let address = "";
+      if (
+        typeof selectedPlace === "object" &&
+        selectedPlace.formatted_address
+      ) {
+        formattedAddress = selectedPlace.formatted_address;
+        address = formatAddress(selectedPlace.formatted_address);
+      } else {
+        formattedAddress = selectedPlace;
+        address = formatAddress(selectedPlace);
+      }
+
+      // Call the Geocoding api to get the coordinates to place the marker
+      try {
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${googleMapsApiKey}`
+        );
+
+        if (response.ok) {
+          const jsonData = await response.json();
+          setMarkerCoords(jsonData.results[0].geometry.location);
+        }
+      } catch (err) {
+        setError(true);
+        setFeedbackMessage("Error");
+      }
+
+      setFormData({
+        ...formData,
+        ["location"]: formattedAddress,
+      });
+    }
+    getCoords();
+  }, [selectedPlace]);
 
   return (
     <>
@@ -224,6 +283,27 @@ function EventCreationModal({
                 </div>
               )}
             </div>
+
+            <div className={styles.location}>
+              <APIProvider apiKey={googleMapsApiKey}>
+                <div style={{ height: "400px", width: "100%", zIndex: "1" }}>
+                  <Map
+                    defaultZoom={9}
+                    defaultCenter={markerCoords}
+                    mapId={googleMapsMapId}
+                  />
+                  <AdvancedMarker position={markerCoords} />
+                  <MapControl position={ControlPosition.TOP}>
+                    <PlaceAutocomplete
+                      onPlaceSelect={setSelectedPlace}
+                      savedLocation=""
+                    />
+                  </MapControl>
+                  <MapHandler place={selectedPlace} />
+                </div>
+              </APIProvider>
+            </div>
+
             <div className={styles.field}>
               <label htmlFor="body">Description:</label>
               <textarea

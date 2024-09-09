@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import API_URL from "../assets/api-url";
 import DeleteConfirmation from "./DeleteConfirmation";
 import styles from "../styles/CategoryItem.module.css";
 
@@ -12,6 +11,7 @@ function CategoryItem({
   setError,
 }) {
   const navigate = useNavigate();
+  const APIURL = import.meta.env.VITE_API_URL;
 
   const [isChecked, setIsChecked] = useState(true);
   const [displayEditField, setDisplayEditField] = useState(false);
@@ -43,7 +43,7 @@ function CategoryItem({
         return;
       }
 
-      const response = await fetch(`${API_URL}/category/color`, {
+      const response = await fetch(`${APIURL}/category/color`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +90,7 @@ function CategoryItem({
         return;
       }
 
-      const response = await fetch(`${API_URL}/category/`, {
+      const response = await fetch(`${APIURL}/category/`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -125,7 +125,7 @@ function CategoryItem({
         return;
       }
 
-      const response = await fetch(`${API_URL}/category/`, {
+      const response = await fetch(`${APIURL}/category/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

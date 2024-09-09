@@ -6,11 +6,11 @@ import EventEditingModal from "./EventEditingModal";
 import Sidebar from "./Sidebar";
 import Nav from "./Nav";
 import Feedback from "./Feedback";
-import API_URL from "../assets/api-url";
 import styles from "../styles/Dashboard.module.css";
 
 function Dashboard({ loggedInUser }) {
   const navigate = useNavigate();
+  const APIURL = import.meta.env.VITE_API_URL;
 
   const [displayEventModal, setDisplayEventModal] = useState(false);
   const [displayEditModal, setDisplayEditModal] = useState(false);
@@ -33,7 +33,7 @@ function Dashboard({ loggedInUser }) {
         return;
       }
 
-      const response = await fetch(`${API_URL}/events/`, {
+      const response = await fetch(`${APIURL}/events/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ function Dashboard({ loggedInUser }) {
           return;
         }
 
-        const response = await fetch(`${API_URL}/category/`, {
+        const response = await fetch(`${APIURL}/category/`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

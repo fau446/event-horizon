@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import API_URL from "../assets/api-url";
 import styles from "../styles/Nav.module.css";
 
 function Nav({ loggedInUser }) {
   const navigate = useNavigate();
+  const APIURL = import.meta.env.VITE_API_URL;
 
   async function logout() {
     try {
@@ -13,7 +13,7 @@ function Nav({ loggedInUser }) {
         return;
       }
 
-      const response = await fetch(`${API_URL}/auth/logout`, {
+      const response = await fetch(`${APIURL}/auth/logout`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,

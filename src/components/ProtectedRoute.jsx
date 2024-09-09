@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API_URL from "../assets/api-url";
 import styles from "../styles/ProtectedRoute.module.css";
 
 const ProtectedRoute = ({ component: Component }) => {
+  const navigate = useNavigate();
+  const APIURL = import.meta.env.VITE_API_URL;
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState("");
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function checkAuthentication() {
@@ -18,7 +19,7 @@ const ProtectedRoute = ({ component: Component }) => {
           return;
         }
 
-        const response = await fetch(`${API_URL}/auth/check_authentication`, {
+        const response = await fetch(`${APIURL}/auth/check_authentication`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

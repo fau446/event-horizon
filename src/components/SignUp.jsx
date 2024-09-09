@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import API_URL from "../assets/api-url";
 import Feedback from "./Feedback";
 import styles from "../styles/LoginSignUp.module.css";
 
 function SignUp() {
   const navigate = useNavigate();
+  const APIURL = import.meta.env.VITE_API_URL;
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [feedbackMessage, setFeedbackMessage] = useState("");
@@ -20,7 +20,7 @@ function SignUp() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/auth/sign_up`, {
+      const response = await fetch(`${APIURL}/auth/sign_up`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
