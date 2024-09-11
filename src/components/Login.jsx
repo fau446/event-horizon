@@ -18,6 +18,13 @@ function Login() {
 
   async function handleFormSubmit(e) {
     e.preventDefault();
+
+    // if login as example user button clicked
+    if (e.type === "click") {
+      formData.email = "user1@example.com";
+      formData.password = "password1";
+    }
+
     setIsLoading(true);
     try {
       const response = await fetch(`${APIURL}/auth/login`, {
@@ -94,9 +101,19 @@ function Login() {
                 <div></div>
               </div>
             ) : (
-              <button className={styles.button}>Login</button>
+              <div className={styles.buttons}>
+                <button className={styles.button}>Login</button>
+                <button
+                  type="button"
+                  className={styles.exampleButton}
+                  onClick={handleFormSubmit}
+                >
+                  Login as example user
+                </button>
+              </div>
             )}
           </form>
+
           <div className={styles.authFooter}>
             <span>New to Event Horizon?</span>
             <a onClick={() => navigate("/sign_up")}> Sign Up</a>
