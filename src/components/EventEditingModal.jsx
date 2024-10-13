@@ -90,6 +90,17 @@ function EventEditingModal({
   async function handleFormSubmit(e) {
     e.preventDefault();
 
+    const requiredFields = ["title", "start_time", "categoryName"];
+    const emptyFields = requiredFields.filter((field) => !formData[field]);
+
+    if (emptyFields.length > 0) {
+      setError(true);
+      setFeedbackMessage(
+        `Please fill in the missing fields: ${emptyFields.join(", ")}`
+      );
+      return;
+    }
+
     try {
       const accessToken = localStorage.getItem("access_token");
       if (!accessToken) {
@@ -113,6 +124,11 @@ function EventEditingModal({
         setDisplayEditModal(false);
         setError(false);
         setFeedbackMessage("Event successfully edited!");
+      } else {
+        const errorData = await response.json();
+        setError(true);
+        setDisableButtons(false);
+        setFeedbackMessage(errorData.error);
       }
     } catch (err) {
       setError(true);
@@ -359,6 +375,7 @@ function EventEditingModal({
                 rows="10"
                 value={formData.body}
                 onChange={handleInputChange}
+                placeholder="(Optional)"
               />
             </div>
             {formData.status === "complete" ? (
@@ -370,7 +387,6 @@ function EventEditingModal({
                 Mark as Complete
               </button>
             )}
-            {!disableButtons ? <p>Not disabled</p> : <p>Disabled</p>}
             <div className={styles.buttons}>
               <button type="button" onClick={() => setDisplayEditModal(false)}>
                 Cancel

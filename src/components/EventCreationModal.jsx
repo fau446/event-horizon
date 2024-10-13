@@ -71,13 +71,7 @@ function EventCreationModal({
   async function handleFormSubmit(e) {
     e.preventDefault();
 
-    const requiredFields = [
-      "title",
-      "start_time",
-      "end_time",
-      "categoryName",
-      "body",
-    ];
+    const requiredFields = ["title", "start_time", "categoryName"];
     const emptyFields = requiredFields.filter((field) => !formData[field]);
 
     if (emptyFields.length > 0) {
@@ -111,6 +105,11 @@ function EventCreationModal({
         setDisplayEventModal(false);
         setError(false);
         setFeedbackMessage("Event successfully created!");
+      } else {
+        const errorData = await response.json();
+        setError(true);
+        setDisableButtons(false);
+        setFeedbackMessage(errorData.error);
       }
     } catch (err) {
       setError(true);
@@ -317,6 +316,7 @@ function EventCreationModal({
                 rows="10"
                 value={formData.body}
                 onChange={handleInputChange}
+                placeholder="(Optional)"
               />
             </div>
             <div className={styles.buttons}>
