@@ -20,6 +20,7 @@ function CategoryItem({
     useState(false);
   const [colorDropdownValue, setColorDropdownValue] = useState(category.color);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [disableButtons, setDisableButtons] = useState(false);
 
   useEffect(() => {
     onToggle(category, true);
@@ -125,6 +126,8 @@ function CategoryItem({
         return;
       }
 
+      setDisableButtons(true);
+
       const response = await fetch(`${APIURL}/category/`, {
         method: "DELETE",
         headers: {
@@ -142,6 +145,7 @@ function CategoryItem({
       }
     } catch (err) {
       setError(true);
+      setDisableButtons(false);
       setFeedbackMessage("Error, server is down.");
     }
   }
@@ -153,6 +157,7 @@ function CategoryItem({
           <DeleteConfirmation
             deleteAction={deleteCategory}
             setDisplayConfirmationWindow={setDisplayConfirmationWindow}
+            disableButtons={disableButtons}
           />
         )}
         <input
@@ -207,23 +212,30 @@ function CategoryItem({
 
       <div className={styles.buttons}>
         {displayEditField ? (
-          <img
-            className="icon"
-            src={"../../accept.png"}
-            onClick={submitNameChange}
-          />
+          <button className={styles.button} disabled={disableButtons}>
+            <img
+              className="icon"
+              src={"../../accept.png"}
+              onClick={submitNameChange}
+            />
+          </button>
         ) : (
+          <button className={styles.button}>
+            <img
+              className="icon"
+              src={"../../edit.png"}
+              onClick={openEditField}
+            />
+          </button>
+        )}
+        <button className={styles.button}>
           <img
             className="icon"
-            src={"../../edit.png"}
-            onClick={openEditField}
+            disabled={disableButtons}
+            src={"../../delete.png"}
+            onClick={() => setDisplayConfirmationWindow(true)}
           />
-        )}
-        <img
-          className="icon"
-          src={"../../delete.png"}
-          onClick={() => setDisplayConfirmationWindow(true)}
-        />
+        </button>
       </div>
     </div>
   );

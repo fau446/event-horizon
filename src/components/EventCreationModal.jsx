@@ -42,6 +42,7 @@ function EventCreationModal({
     lng: -123.119057,
   });
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [disableButtons, setDisableButtons] = useState(false);
 
   function handleInputChange(e) {
     if (e.target.name === "category") {
@@ -94,6 +95,8 @@ function EventCreationModal({
         return;
       }
 
+      setDisableButtons(true);
+
       const response = await fetch(`${APIURL}/events/`, {
         method: "POST",
         headers: {
@@ -111,6 +114,7 @@ function EventCreationModal({
       }
     } catch (err) {
       setError(true);
+      setDisableButtons(false);
       setFeedbackMessage("Error, server is down.");
     }
   }
@@ -319,7 +323,9 @@ function EventCreationModal({
               <button type="button" onClick={() => setDisplayEventModal(false)}>
                 Cancel
               </button>
-              <button className={styles.confirm}>Add Event</button>
+              <button className={styles.confirm} disabled={disableButtons}>
+                Add Event
+              </button>
             </div>
           </form>
         </div>

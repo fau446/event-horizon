@@ -16,6 +16,15 @@
   min-width: 50px;
 }
 
+.button {
+  padding: 0;
+  border: none;
+  background: none;
+  display: inline-block;
+  width: fit-content;
+  height: fit-content;
+}
+
 .colorDropdownWrapper {
   display: inline-block;
 }

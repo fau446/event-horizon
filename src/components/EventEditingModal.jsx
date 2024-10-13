@@ -47,6 +47,7 @@ function EventEditingModal({
     lng: -123.119057,
   });
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [disableButtons, setDisableButtons] = useState(false);
 
   // sets the initial state of formData
   useEffect(() => {
@@ -96,6 +97,8 @@ function EventEditingModal({
         return;
       }
 
+      setDisableButtons(true);
+
       const response = await fetch(`${APIURL}/events/`, {
         method: "PUT",
         headers: {
@@ -113,6 +116,7 @@ function EventEditingModal({
       }
     } catch (err) {
       setError(true);
+      setDisableButtons(false);
       setFeedbackMessage("Error, server is down.");
     }
   }
@@ -124,6 +128,8 @@ function EventEditingModal({
         navigate("/login");
         return;
       }
+
+      setDisableButtons(true);
 
       const response = await fetch(`${APIURL}/events/`, {
         method: "DELETE",
@@ -142,6 +148,7 @@ function EventEditingModal({
       }
     } catch (err) {
       setError(true);
+      setDisableButtons(false);
       setFeedbackMessage("Error, server is down.");
     }
   }
@@ -195,6 +202,7 @@ function EventEditingModal({
             <DeleteConfirmation
               deleteAction={deleteEvent}
               setDisplayConfirmationWindow={setDisplayConfirmationWindow}
+              disableButtons={disableButtons}
             />
           )}
 
@@ -362,6 +370,7 @@ function EventEditingModal({
                 Mark as Complete
               </button>
             )}
+            {!disableButtons ? <p>Not disabled</p> : <p>Disabled</p>}
             <div className={styles.buttons}>
               <button type="button" onClick={() => setDisplayEditModal(false)}>
                 Cancel
@@ -370,10 +379,13 @@ function EventEditingModal({
                 className={styles.delete}
                 type="button"
                 onClick={() => setDisplayConfirmationWindow(true)}
+                disabled={disableButtons}
               >
                 Delete event
               </button>
-              <button className={styles.confirm}>Save Changes</button>
+              <button className={styles.confirm} disabled={disableButtons}>
+                Save Changes
+              </button>
             </div>
           </form>
         </div>

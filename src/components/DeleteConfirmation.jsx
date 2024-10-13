@@ -1,6 +1,10 @@
 import styles from "../styles/DeleteConfirmation.module.css";
 
-function DeleteConfirmation({ deleteAction, setDisplayConfirmationWindow }) {
+function DeleteConfirmation({
+  deleteAction,
+  setDisplayConfirmationWindow,
+  disableButtons,
+}) {
   return (
     <>
       <div className={styles.modal}>
@@ -25,6 +29,7 @@ function DeleteConfirmation({ deleteAction, setDisplayConfirmationWindow }) {
             className={styles.deleteBtn}
             onClick={deleteAction}
             type="button"
+            disabled={disableButtons}
           >
             Delete
           </button>
