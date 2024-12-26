@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/Nav.module.css";
 
-function Nav({ loggedInUser }) {
+function Nav({ loggedInUser, toggleSettingsModal }) {
   const navigate = useNavigate();
   const APIURL = import.meta.env.VITE_API_URL;
 
@@ -33,6 +33,9 @@ function Nav({ loggedInUser }) {
     <div className={styles.nav}>
       <div className={styles.top}>
         <h1>Event Horizon</h1>
+        <button type="button" onClick={toggleSettingsModal}>
+          Settings
+        </button>
         <button type="button" onClick={logout}>
           Logout
         </button>

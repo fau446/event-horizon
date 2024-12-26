@@ -8,6 +8,7 @@ const ProtectedRoute = ({ component: Component }) => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState("");
+  const [userTimezone, setUserTimezone] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const ProtectedRoute = ({ component: Component }) => {
           const jsonData = await response.json();
           setIsAuthenticated(true);
           setLoggedInUser(jsonData.logged_in_as);
+          setUserTimezone(jsonData.time_zone);
         } else {
           navigate("/login");
         }
@@ -58,7 +60,13 @@ const ProtectedRoute = ({ component: Component }) => {
     );
   }
 
-  return isAuthenticated ? <Component loggedInUser={loggedInUser} /> : null;
+  return isAuthenticated ? (
+    <Component
+      loggedInUser={loggedInUser}
+      userTimezone={userTimezone}
+      setUserTimezone={setUserTimezone}
+    />
+  ) : null;
 };
 
 export default ProtectedRoute;

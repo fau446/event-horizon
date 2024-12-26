@@ -3,23 +3,26 @@ import { useNavigate } from "react-router-dom";
 import Calendar from "./Calendar";
 import EventCreationModal from "./EventCreationModal";
 import EventEditingModal from "./EventEditingModal";
+import SettingsModal from "./SettingsModal";
 import Sidebar from "./Sidebar";
 import Nav from "./Nav";
 import Feedback from "./Feedback";
 import styles from "../styles/Dashboard.module.css";
 
-function Dashboard({ loggedInUser }) {
+function Dashboard({ loggedInUser, userTimezone, setUserTimezone }) {
   const navigate = useNavigate();
   const APIURL = import.meta.env.VITE_API_URL;
 
   const [displayEventModal, setDisplayEventModal] = useState(false);
   const [displayEditModal, setDisplayEditModal] = useState(false);
+  const [displaySettingsModal, setDisplaySettingsModal] = useState(false);
   const [allCategories, setAllCategories] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [allEvents, setAllEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState({});
   const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [allTimeZones, setAllTimeZones] = useState([]);
   const [error, setError] = useState(false);
 
   // used to update filteredCategories during initial render
@@ -56,8 +59,22 @@ function Dashboard({ loggedInUser }) {
     }
   }
 
+  async function fetchTimezones() {
+    try {
+      const response = await fetch(`${APIURL}/timezone/`);
+
+      if (response.ok) {
+        const timezones = await response.json();
+        setAllTimeZones(timezones);
+      }
+    } catch (err) {
+      setError(true);
+    }
+  }
+
   useEffect(() => {
     fetchEvents();
+    fetchTimezones();
   }, []);
 
   useEffect(() => {
@@ -139,6 +156,12 @@ function Dashboard({ loggedInUser }) {
       : setDisplayEventModal(true);
   }
 
+  function toggleSettingsModal() {
+    displaySettingsModal
+      ? setDisplaySettingsModal(false)
+      : setDisplaySettingsModal(true);
+  }
+
   function handleCategoryToggle(category, isChecked) {
     let updateArrayCopy = updateArray;
     if (!isChecked) {
@@ -172,7 +195,10 @@ function Dashboard({ loggedInUser }) {
   return (
     <div className={styles.dashboard}>
       <div className={styles.nav}>
-        <Nav loggedInUser={loggedInUser} />
+        <Nav
+          loggedInUser={loggedInUser}
+          toggleSettingsModal={toggleSettingsModal}
+        />
       </div>
       {feedbackMessage !== "" && (
         <Feedback message={feedbackMessage} error={error} />
@@ -204,6 +230,14 @@ function Dashboard({ loggedInUser }) {
           setDisplayEditModal={setDisplayEditModal}
           setFeedbackMessage={setFeedbackMessage}
           setError={setError}
+        />
+      )}
+      {displaySettingsModal && (
+        <SettingsModal
+          setDisplaySettingsModal={setDisplaySettingsModal}
+          allTimeZones={allTimeZones}
+          userTimezone={userTimezone}
+          setUserTimezone={setUserTimezone}
         />
       )}
       <Calendar
