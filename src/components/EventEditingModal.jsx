@@ -31,6 +31,7 @@ function EventEditingModal({
     title: event.title,
     start_time: event.start_time,
     end_time: event.end_time,
+    reminder_time: "",
     categoryName: "",
     categoryColor: "blue",
     body: event.body,
@@ -54,7 +55,17 @@ function EventEditingModal({
     const eventCategory = categories.filter(
       (category) => category.category_id === event.category_id
     );
-    setFormData({ ...formData, categoryName: eventCategory[0].name });
+
+    let reminder_time = "";
+    if (event.reminder_time !== null) {
+      reminder_time = event.reminder_time;
+    }
+
+    setFormData({
+      ...formData,
+      categoryName: eventCategory[0].name,
+      reminder_time: reminder_time,
+    });
   }, []);
 
   function handleInputChange(e) {
@@ -262,6 +273,16 @@ function EventEditingModal({
                   onChange={handleInputChange}
                 />
               </div>
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="reminder_time">Reminder Time:</label>
+              <input
+                type="datetime-local"
+                name="reminder_time"
+                id="reminder_time"
+                value={formData.reminder_time}
+                onChange={handleInputChange}
+              />
             </div>
             <div className={styles.categorySection}>
               <label htmlFor="category">Category:</label>

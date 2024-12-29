@@ -28,6 +28,7 @@ function EventCreationModal({
     title: "",
     start_time: "",
     end_time: "",
+    reminder_time: "",
     categoryName: "",
     categoryColor: "blue",
     body: "",
@@ -203,6 +204,16 @@ function EventCreationModal({
                   onChange={handleInputChange}
                 />
               </div>
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="reminder_time">Reminder Time:</label>
+              <input
+                type="datetime-local"
+                name="reminder_time"
+                id="reminder_time"
+                value={formData.reminder_time}
+                onChange={handleInputChange}
+              />
             </div>
             <div className={styles.categorySection}>
               <label htmlFor="category">Category:</label>
