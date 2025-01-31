@@ -180,6 +180,10 @@ function EventEditingModal({
     }
   }
 
+  function clearReminderTime() {
+    setFormData({ ...formData, reminder_time: "" })
+  }
+
   useEffect(() => {
     async function getCoords() {
       // return if selectedPlace is null
@@ -283,6 +287,9 @@ function EventEditingModal({
                 value={formData.reminder_time}
                 onChange={handleInputChange}
               />
+            </div>
+            <div>
+              <button type="button" onClick={clearReminderTime}>Clear Reminder Time</button>
             </div>
             <div className={styles.categorySection}>
               <label htmlFor="category">Category:</label>

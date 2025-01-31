@@ -69,6 +69,10 @@ function EventCreationModal({
     setDropdownOpen(!dropdownOpen);
   }
 
+  function clearReminderTime() {
+    setFormData({ ...formData, reminder_time: "" })
+  }
+
   async function handleFormSubmit(e) {
     e.preventDefault();
 
@@ -214,6 +218,9 @@ function EventCreationModal({
                 value={formData.reminder_time}
                 onChange={handleInputChange}
               />
+            </div>
+            <div>
+              <button type="button" onClick={clearReminderTime}>Clear Reminder Time</button>
             </div>
             <div className={styles.categorySection}>
               <label htmlFor="category">Category:</label>
